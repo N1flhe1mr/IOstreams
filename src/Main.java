@@ -33,6 +33,9 @@ public class Main {
         list.add("C:/Games/savegames/save2.dat");
         list.add("C:/Games/savegames/save3.dat");
         zipFiles("C:/Games/savegames/savegames.zip", list);
+        deleteFile("C:/Games/savegames/save1.dat");
+        deleteFile("C:/Games/savegames/save2.dat");
+        deleteFile("C:/Games/savegames/save3.dat");
         openZip("C:/Games/savegames/savegames.zip");
         openProgress("C:/Games/savegames/save1.dat");
         openProgress("C:/Games/savegames/save2.dat");
@@ -70,8 +73,8 @@ public class Main {
                 logs.append(newFile.length());
                 logs.append('\n');
             }
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -85,9 +88,9 @@ public class Main {
     }
 
     public static void saveGame(String filePath, GameProgress gameProgress) {
-        try (FileOutputStream fos = new FileOutputStream(filePath);
-             ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(gameProgress);
+        try (FileOutputStream fout = new FileOutputStream(filePath);
+             ObjectOutputStream oout = new ObjectOutputStream(fout)) {
+            oout.writeObject(gameProgress);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -99,14 +102,13 @@ public class Main {
             Iterator<String> iterator = list.iterator();
             while (iterator.hasNext()) {
                 String save = iterator.next();
-                FileInputStream fis = new FileInputStream(save);
+                FileInputStream fin = new FileInputStream(save);
                 ZipEntry entry = new ZipEntry(save);
                 zout.putNextEntry(entry);
-                byte[] buffer = new byte[fis.available()];
-                fis.read(buffer);
+                byte[] buffer = new byte[fin.available()];
+                fin.read(buffer);
                 zout.write(buffer);
-                fis.close();
-                deleteFile(save);
+                fin.close();
             }
             zout.closeEntry();
         } catch (Exception e) {
