@@ -149,6 +149,10 @@ public class Main {
 
     public static void deleteFile(String file) {
         File newFile = new File(file);
-        if (newFile.delete()) ;
+        if (newFile.delete()) {
+            System.out.println(file + " - deleted.");
+        } else {
+            System.out.println("Can't delete a file");
+        }
     }
 }
